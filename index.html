@@ -1,383 +1,811 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Água de Amêndoa — Arquivo Perdido (Backrooms)</title>
-  <style>
-    /* ===== Base & Texture ===== */
-    :root{
-      --bg-left:#fff;
-      --bg-right:#e6f7e9;
-      --paper:#f7f0a5;
-      --accent:#1b1b1b;
-      --muted:#444;
-      --glass: rgba(255,255,255,0.06);
-    }
-    html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:linear-gradient(90deg,var(--paper) 0 45%, var(--bg-right) 45% 100%); color:var(--accent);}
-    body::before{
-      content:"";position:fixed;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:0.12;
-      background-image:radial-gradient(circle at 20% 10%, rgba(0,0,0,0.02) 0 2px, transparent 3px),
-                      radial-gradient(circle at 80% 80%, rgba(0,0,0,0.02) 0 2px, transparent 3px);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10110f">
+<title>BACKROOMS // QUIZ</title>
 
-    .card{max-width:920px;margin:48px auto;padding:28px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.35));box-shadow:0 8px 30px rgba(10,10,10,0.12);backdrop-filter:blur(4px);position:relative;overflow:hidden;border:1px solid rgba(0,0,0,0.06)}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
-    /* glitch title */
-    .title{font-size:clamp(22px,5vw,36px);font-weight:800;letter-spacing:0.6px;position:relative;margin:0 0 10px}
-    .title .glitch{display:inline-block;position:relative}
-    .title .glitch::before,.title .glitch::after{content:attr(data-text);position:absolute;left:0;top:0;clip-path:polygon(0 0,100% 0,100% 45%,0 45%);}    
-    .title .glitch::before{transform:translate(2px,-2px);opacity:0.9;color:#083;mix-blend-mode:screen;}
-    .title .glitch::after{transform:translate(-2px,2px);opacity:0.9;color:#b00;mix-blend-mode:multiply;clip-path:polygon(0 55%,100% 55%,100% 100%,0 100%);}    
-    @keyframes glitch-shift{0%{transform:translateX(0)}20%{transform:translateX(-1px)}40%{transform:translateX(1px)}60%{transform:translateX(-1px)}80%{transform:translateX(1px)}100%{transform:translateX(0)}}
-    .title .glitch{animation:glitch-shift 2.6s infinite linear}
+:root {
+  color-scheme: dark;
+  --bg:#10110f;
+  --panel:#191b17;
+  --line:#34382d;
+  --yellow:#d5d68b;
+  --muted:#929586;
+  --green:#a8c98a;
+  --red:#d17c70;
+}
 
-    .meta{font-size:13px;color:var(--muted);margin-bottom:16px}
+* { box-sizing:border-box; }
 
-    .cols{display:grid;grid-template-columns:1fr 360px;gap:18px}
-    .section{background:rgba(255,255,255,0.5);padding:14px;border-radius:8px;border:1px dashed rgba(0,0,0,0.06)}
+body {
+  margin:0;
+  min-height:100vh;
+  color:#e8e9dc;
+  font-family:'Space Grotesk',sans-serif;
+  background:radial-gradient(ellipse at 50% -20%,#34382a 0%,transparent 55%),var(--bg);
+  padding:28px 16px 42px;
+}
 
-    h3{margin:6px 0 10px}
-    ul{margin:8px 0 12px;padding-left:18px}
-    li{margin:6px 0}
-    .note{font-size:13px;color:#111;background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));padding:10px;border-radius:6px}
+body:before {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.12;
+  z-index:-1;
+  background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.035) 4px);
+}
 
-    /* binary rain */
-    .matrix{position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:0.16}
-    .column{position:absolute;top:-100vh;white-space:nowrap;will-change:transform}
-    .column span{display:block;font-family:monospace;font-size:12px;line-height:12px;filter:blur(0.2px)}
+.wrap {
+  width:min(850px,100%);
+  margin:auto;
+}
 
-    /* buttons */
-    .controls{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
-    .btn{background:#111;color:#fff;padding:8px 10px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
-    .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(0,0,0,0.06)}
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:26px;
+}
 
-    .footer{font-size:12px;color:var(--muted);margin-top:12px}
+.mode-toggle {
+  background:#25291f;
+  color:var(--yellow);
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:10px 13px;
+  font:11px 'Share Tech Mono',monospace;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:.2s;
+}
 
-    @media (max-width:880px){.cols{grid-template-columns:1fr}}
+.mode-toggle:hover {
+  background:#34382a;
+  border-color:var(--yellow);
+}
 
-    /* ===== Página Backrooms (oculta inicialmente) ===== */
-    #backroomsPage {
-      display:none;
-      position:fixed;
-      inset:0;
-      background:linear-gradient(135deg,#f7f18b,#f5f5c4);
-      font-family:"Courier New", monospace;
-      z-index:999;
-      flex-direction:column;
-      color:#111;
-      overflow-y:auto; 
-      padding: 20px; /* Adicionado padding para evitar que o conteúdo encoste nas bordas */
-    }
-    #backroomsPage::before {
-      content:"";
-      position:absolute;inset:0;
-      background-image:
-        repeating-linear-gradient(90deg, rgba(0,0,0,0.05) 0 1px, transparent 1px 4px),
-        repeating-linear-gradient(180deg, rgba(0,0,0,0.05) 0 1px, transparent 1px 4px);
-      opacity:0.2;
-    }
-    #backroomsPage h2 {
-      font-size:clamp(26px,6vw,48px);
-      font-weight:900;
-      text-transform:uppercase;
-      position:relative;
-      margin:20px 0 0;
-    }
-    #backroomsPage h2::before, #backroomsPage h2::after {
-      content:attr(data-text);
-      position:absolute;
-      left:0;top:0;width:100%;
-    }
-    #backroomsPage h2::before {
-      left:2px;
-      text-shadow:-2px 0 #0f0;
-      animation:glitch 2s infinite linear alternate-reverse;
-    }
-    #backroomsPage h2::after {
-      left:-2px;
-      text-shadow:-2px 0 #f00;
-      animation:glitch 1.5s infinite linear alternate;
-    }
-    #backroomsPage .content {
-        max-width: 720px;
-        margin: 20px auto;
-        padding: 20px;
-        text-align: center;
-    }
-    #backroomsPage .content h3 {
-        margin-top: 16px;
-        font-size: clamp(18px, 4vw, 28px);
-        font-weight: 700;
-        animation: shake 2.5s infinite;
-    }
-    #backroomsPage .content p {
-        margin: 1em 0;
-        line-height: 1.6;
-    }
+.status {
+  color:var(--muted);
+  font:11px 'Share Tech Mono',monospace;
+  letter-spacing:1px;
+}
 
-    @keyframes shake {
-      0%,100%{transform:translate(0,0);}
-      20%{transform:translate(-1px,1px);}
-      40%{transform:translate(1px,-1px);}
-      60%{transform:translate(-2px,0);}
-      80%{transform:translate(2px,1px);}
-    }
-    .fog {
-      position:absolute;inset:0;
-      background:radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15), transparent 70%),
-                 radial-gradient(circle at 80% 70%, rgba(255,255,255,0.1), transparent 70%);
-      animation:fogmove 20s infinite alternate ease-in-out;
-    }
-    @keyframes fogmove {from{transform:translateX(-20px);} to{transform:translateX(20px);}}
-    .btn.back {margin:28px auto;z-index:10;}
-  </style>
+.intro {
+  text-align:center;
+  margin:22px 0 25px;
+}
+
+.eyebrow {
+  color:var(--yellow);
+  font:12px 'Share Tech Mono',monospace;
+  letter-spacing:3px;
+}
+
+h1 {
+  margin:9px 0 8px;
+  font-size:clamp(32px,7vw,54px);
+  line-height:1;
+  letter-spacing:-2px;
+}
+
+.intro p {
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:22px 0 16px;
+}
+
+.stat {
+  background:rgba(25,27,23,.88);
+  border:1px solid var(--line);
+  padding:12px 14px;
+  border-radius:8px;
+}
+
+.stat small {
+  display:block;
+  color:var(--muted);
+  font:10px 'Share Tech Mono',monospace;
+  letter-spacing:1.5px;
+}
+
+.stat strong {
+  display:block;
+  margin-top:5px;
+  font-size:22px;
+  font-weight:600;
+}
+
+.image-shell {
+  position:relative;
+  background:#080908;
+  border:1px solid #45483a;
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 18px 55px #0008;
+}
+
+.image-top {
+  height:35px;
+  padding:0 13px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:#a8aa9a;
+  background:#1c1e19;
+  border-bottom:1px solid #383b30;
+  font:10px 'Share Tech Mono',monospace;
+  letter-spacing:1px;
+}
+
+.dots {
+  display:flex;
+  gap:5px;
+}
+
+.dots i {
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#777968;
+}
+
+.photo {
+  height:clamp(230px,52vw,440px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+.photo img {
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  background:#080908;
+}
+
+.photo .fallback {
+  display:none;
+  text-align:center;
+  padding:25px;
+  color:var(--muted);
+  font:13px 'Share Tech Mono',monospace;
+}
+
+.question {
+  text-align:center;
+  margin:22px 0 14px;
+  color:#dfe0d3;
+  font-size:15px;
+}
+
+.answers {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+button {
+  font:inherit;
+  cursor:pointer;
+}
+
+.answer {
+  min-height:54px;
+  border:1px solid #414438;
+  border-radius:7px;
+  color:#e6e7d9;
+  background:linear-gradient(180deg,#22251e,#191b17);
+  padding:12px 14px;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  transition:.18s ease;
+}
+
+.answer:hover:not(:disabled) {
+  border-color:var(--yellow);
+  transform:translateY(-2px);
+  background:#292c22;
+}
+
+.answer:disabled {
+  cursor:default;
+  opacity:1;
+}
+
+.key {
+  color:var(--yellow);
+  font:12px 'Share Tech Mono',monospace;
+  border:1px solid #555944;
+  padding:4px 7px;
+  border-radius:4px;
+}
+
+.answer.correct {
+  border-color:var(--green);
+  background:#202b1d;
+}
+
+.answer.wrong {
+  border-color:var(--red);
+  background:#2b201d;
+}
+
+.feedback {
+  min-height:48px;
+  padding:14px 3px 4px;
+  text-align:center;
+  font-size:14px;
+  color:var(--muted);
+}
+
+.feedback.good { color:var(--green); }
+.feedback.bad { color:var(--red); }
+
+.next {
+  display:none;
+  width:100%;
+  border:0;
+  border-radius:7px;
+  padding:15px;
+  color:#171910;
+  background:var(--yellow);
+  font-weight:700;
+  letter-spacing:.5px;
+  margin-top:8px;
+}
+
+.next:hover {
+  filter:brightness(1.08);
+}
+
+.bottom {
+  text-align:center;
+  margin-top:25px;
+  color:#6f7367;
+  font:10px 'Share Tech Mono',monospace;
+  letter-spacing:1px;
+  line-height:1.8;
+}
+
+.progress {
+  height:3px;
+  background:#2b2e25;
+  border-radius:8px;
+  overflow:hidden;
+  margin-top:14px;
+}
+
+.progress span {
+  display:block;
+  height:100%;
+  width:0;
+  background:var(--yellow);
+  transition:width .3s;
+}
+
+@media(max-width:520px) {
+  body { padding:18px 12px 30px; }
+  header { margin-bottom:18px; }
+  .stats { gap:7px; }
+  .stat { padding:10px; }
+  .stat strong { font-size:19px; }
+  .answers { gap:8px; }
+  .answer { padding:11px 9px;font-size:13px;gap:8px; }
+  .key { padding:3px 6px; }
+}
+</style>
 </head>
+
 <body>
-  <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:start;gap:16px;">
-      <div style="flex:1">
-        <h1 class="title"><span class="glitch" data-text="Água de Amêndoa — Arquivo Perdido">Água de Amêndoa — Arquivo Perdido</span></h1>
-        <div class="meta">Nível: desconhecido · Documento recuperado · Sensores indicam leve pulsações</div>
-      </div>
-      <div style="text-align:right">
-        <button class="btn" id="toggleGlitch">Ativar Glitch</button>
-        <button class="btn ghost" id="downloadBtn">Baixar HTML</button>
-      </div>
-    </div>
-    <div class="cols" style="margin-top:12px">
-      <main class="section">
-        <h3>Introdução</h3>
-        <p class="note">Este é um manual recuperado em um dos níveis amarelos. Contém instruções para preparar a chamada "Água de Amêndoa".</p>
-        <h3>Ingredientes</h3>
-        <ul>
-          <li>1 xícara de amêndoas cruas</li>
-          <li>3 a 4 xícaras de água filtrada</li>
-          <li>Mel/açúcar (opcional)</li>
-          <li>1 pitada de sal (opcional)</li>
-        </ul>
-        <h3>Modo de preparo</h3>
-        <ol>
-          <li>Deixe de molho 8–12h</li>
-          <li>Escorra e lave</li>
-          <li>Bata com água no liquidificador</li>
-          <li>Coe em pano/voal</li>
-          <li>Ajuste mel, baunilha, gelo</li>
-        </ol>
-        <div class="controls">
-          <button class="btn" id="toggleBinary">Parar Chuva Binária</button>
-          <button class="btn ghost" id="toggleCreep">Versão Creepypasta</button>
-          <button class="btn" id="goBackrooms">Como ir pras Backrooms</button>
-        </div>
-        <div class="footer">Arquivo gerado localmente.</div>
-      </main>
-      <aside class="section">
-        <h3>Notas do Explorador</h3>
-        <p class="note">"Bebi metade e tive sonhos de corredores infinitos."</p>
-      </aside>
-    </div>
+<main class="wrap">
+
+<header>
+  <button class="mode-toggle" id="modeButton">
+    ☰ QUIZ: LEVELS
+  </button>
+
+  <div class="status">
+    DATABASE: UNSTABLE <span style="color:#c7c987">●</span>
+  </div>
+</header>
+
+<section class="intro">
+  <div class="eyebrow">IDENTIFICATION PROTOCOL 001</div>
+  <h1 id="title">LEVEL QUIZ</h1>
+  <p>Você conhece os lugares que não deveriam existir?</p>
+</section>
+
+<section class="stats">
+  <div class="stat">
+    <small>ACERTOS</small>
+    <strong id="score">0</strong>
   </div>
 
-  <div class="matrix" id="matrix"></div>
-
-  <div id="backroomsPage">
-    <div class="fog"></div>
-    <h2 data-text="Como ir pras Backrooms">Como ir pras Backrooms</h2>
-    <div class="content">
-      <h3>Método de Ritual</h3>
-      <p>Para tentar o ritual, primeiro você precisa tomar um gole de Água de Amêndoa ou cerveja. Para menores, a água de amêndoa é recomendada. Depois de beber, desenhe um quadrado no chão e comece a jogar objetos dentro dele. Ao fazer isso, você pode receber uma nota misteriosa do "Level The MatrixBlack", nível 1839.</p>
-
-      <h3>O Procedimento Pós-Nota</h3>
-      <p>Com a nota em mãos, feche os olhos e dê cinco passos para frente. Ao abrir os olhos, suba a escada mais próxima. Conte até 10, diga a palavra "Backrooms" três vezes e abra os olhos novamente. Você estará em sua casa, mas notará uma falha na realidade. Uma parede de tijolos aparecerá ao seu lado. Atravesse-a para entrar nas Backrooms.</p>
-
-      <h3>Método Alternativo: Noclip</h3>
-      <p>Se você não quiser seguir o ritual, a única outra maneira de entrar nas Backrooms é por meio de uma falha <b>noclip</b>. A chance de encontrar uma falha dessas é de apenas **0,8402%**.</p>
-
-      <h3>Relatórios de Desaparecimentos</h3>
-      <p>Há indícios de 2722 pessoas desaparecidas até hoje, e relatórios sugerem que o desaparecimento delas está relacionado à realização de rituais. A distribuição dos desaparecimentos por país é a seguinte:</p>
-      <ul>
-        <li>Brasil: 14 pessoas</li>
-<li>EUA: 1.245 pessoas</li>
-<li>França: 45 pessoas</li>
-<li>Reino Unido: 220 pessoas</li>
-<li>China: 542 pessoas</li>
-<li>Índia: 234 pessoas</li>
-<li>Coreia do Sul: 48 pessoas</li>
-<li>Japão: 12 pessoas</li>
-<li>Austrália: 67 pessoas</li>
-<li>Alemanha: 45 pessoas</li>
-<li>Portugal: 68 pessoas</li>
-<li>Canadá: 89 pessoas</li>
-<li>Argentina: 88 pessoas</li>
-<li>Colômbia: 77 pessoas</li>
-<li>Espanha: 66 pessoas</li>
-<li>Irlanda: 29 pessoas</li>
-<li>Ucrânia: 15 pessoas</li>
-<li>Rússia: 110 pessoas</li>
-<li>Chade: 63 pessoas</li>
-<li>Turquia: 23 pessoas</li>
-<li>Arábia Saudita: 1 pessoa</li>
-<li>Nova Zelândia: 15 pessoas</li>
-<li>Itália: 95 pessoas</li>
-<li>Suécia: 68 pessoas</li>
-<li>Chile: 8 pessoas</li>
-<li>Afeganistão: 3 pessoas</li>
-<li>Peru: 6 pessoas</li>
-<li>Suriname: 2 pessoas</li>
-<li>Paraguai: 2 pessoas</li>
-<li>Cuba: 6 pessoas</li>
-<li>Croácia: 13 pessoas</li>
-<li>Grécia: 89 pessoas</li>
-<li>Myanmar: 67 pessoas</li>
-<li>Tailândia: 8 pessoas</li>
-<li>Vietnã: 9 pessoas</li>
-<li>Sri Lanka: 2 pessoas</li>
-<li>Polônia: 60 pessoas</li>
-<li>Hungria: 88 pessoas</li>
-<li>Dinamarca: 100 pessoas</li>
-<li>Sudão: 32 pessoas</li>
-<li>República Centro-Africana: 3 pessoas</li>
-<li>Fiji: 1 pessoa</li>
-<li>Palau: 2 pessoas</li>
-<li>Líbia: 4 pessoas</li>
-<li>Nigéria: 142 pessoas</li>
-<li>Egito: 36 pessoas</li>
-<li>África do Sul: 54 pessoas</li>
-<li>Marrocos: 8 pessoas</li>
-<li>Quênia: 5 pessoas</li>
-<li>Argélia: 11 pessoas</li>
-<li>Senegal: 3 pessoas</li>
-<li>Tunísia: 4 pessoas</li>
-<li>México: 72 pessoas</li>
-<li>Uruguai: 2 pessoas</li>
-<li>Bolívia: 7 pessoas</li>
-<li>Venezuela: 13 pessoas</li>
-<li>Guatemala: 6 pessoas</li>
-<li>Honduras: 4 pessoas</li>
-<li>Nicarágua: 3 pessoas</li>
-<li>Costa Rica: 1 pessoa</li>
-<li>Indonésia: 89 pessoas</li>
-<li>Paquistão: 34 pessoas</li>
-<li>Bangladesh: 21 pessoas</li>
-<li>Malásia: 12 pessoas</li>
-<li>Filipinas: 17 pessoas</li>
-<li>Cingapura: 1 pessoa</li>
-<li>Camboja: 3 pessoas</li>
-<li>Laos: 2 pessoas</li>
-<li>Mongólia: 1 pessoa</li>
-<li>Bélgica: 29 pessoas</li>
-<li>Holanda: 15 pessoas</li>
-<li>Suíça: 9 pessoas</li>
-<li>Noruega: 7 pessoas</li>
-<li>Finlândia: 5 pessoas</li>
-<li>Áustria: 4 pessoas</li>
-<li>República Tcheca: 6 pessoas</li>
-<li>Eslováquia: 2 pessoas</li>
-<li>Irã: 18 pessoas</li>
-<li>Israel: 5 pessoas</li>
-<li>Emirados Árabes Unidos: 1 pessoa</li>
-<li>Catar: 1 pessoa</li>
-<li>Kuwait: 1 pessoa</li>
-<li>Omã: 1 pessoa</li>
-<li>Iêmen: 2 pessoas</li>
-<li>Papua Nova Guiné: 1 pessoa</li>
-<li>Samoa: 1 pessoa</li>
-<li>Tonga: 1 pessoa</li>
-      </ul>
-    </div>
-    <button class="btn back" onclick="closeBackrooms()">Voltar</button>
+  <div class="stat">
+    <small>QUESTÃO</small>
+    <strong id="round">1</strong>
   </div>
+
+  <div class="stat">
+    <small>SEQUÊNCIA</small>
+    <strong id="streak">0</strong>
+  </div>
+</section>
+
+<section class="image-shell">
+  <div class="image-top">
+    <span>CAM_0<span id="camNumber">01</span> // RECOVERED IMAGE</span>
+    <span class="dots"><i></i><i></i><i></i></span>
+  </div>
+
+  <div class="photo">
+    <img id="levelImage" alt="Imagem das Backrooms">
+
+    <div class="fallback" id="fallback">
+      IMAGE NOT FOUND
+      <br><br>
+      O servidor da imagem pode estar indisponível.
+    </div>
+  </div>
+</section>
+
+<div class="progress">
+  <span id="progressBar"></span>
+</div>
+
+<p class="question" id="question">
+  Qual é o nível mostrado na imagem?
+</p>
+
+<section class="answers" id="answers"></section>
+
+<div class="feedback" id="feedback" aria-live="polite">
+  Selecione uma das quatro alternativas.
+</div>
+
+<button class="next" id="nextButton">
+  PRÓXIMA IMAGEM →
+</button>
+
+<div class="bottom">
+  WIKIDOT ARCHIVE // DO NOT TRUST THE ENVIRONMENT
+  <br>
+  Nem toda saída leva para fora.
+</div>
+
+</main>
 
 <script>
-  // ===== Binary rain generator =====
-  const matrix = document.getElementById('matrix');
-  const cols = Math.floor(window.innerWidth / 18);
-  const columnElements = [];
-  function makeColumn(x){
-    const div = document.createElement('div');
-    div.className = 'column';
-    div.style.left = x * 18 + 'px';
-    div.style.fontSize = Math.max(10, Math.random()*14) + 'px';
-    const len = Math.floor(40 + Math.random()*80);
-    for(let i=0;i<len;i++){
-      const span = document.createElement('span');
-      span.textContent = Math.random() > 0.5 ? '0' : '1';
-      div.appendChild(span);
-    }
-    matrix.appendChild(div);
-    columnElements.push({el:div, speed:1+Math.random()*2});
+
+// ==========================================
+// BANCO DE IMAGENS: LEVELS
+// ==========================================
+
+const levels = [
+
+  { name: "Level 0", image: "https://backrooms-wiki.wdfiles.com/local--files/level-0/OGLevel0.jpg" },
+
+  { name: "Level 88", image: "https://backrooms-wiki.wdfiles.com/local--files/level-88/Lake.png" },
+
+  { name: "Level 10", image: "https://scutoidbox.wdfiles.com/local--files/level-10/Level%2010.png" },
+
+  { name: "Level 12", image: "https://backrooms-wiki.wdfiles.com/local--files/level-12/level12-cc.gif" },
+
+  { name: "Level 17", image: "https://backrooms-wiki.wdfiles.com/local--files/level-17/hall" },
+
+  { name: "Level 28", image: "https://backrooms-wiki.wdfiles.com/local--files/level-28/stormstone-keep.png" },
+
+  { name: "Level 14", image: "https://backrooms-wiki.wdfiles.com/local--files/level-14/paradise.jpg" },
+
+  { name: "Level 7", image: "https://backrooms-wiki.wdfiles.com/local--files/level-7/level-7-cc.jpg" },
+
+  { name: "Level 5", image: "https://backrooms-wiki.wdfiles.com/local--files/level-5/Level-5-1-cc.png" },
+
+  { name: "Level 13", image: "https://backrooms-wiki.wdfiles.com/local--files/level-13/13vertical.jpg" },
+
+  { name: "Level 2", image: "https://backrooms-wiki.wdfiles.com/local--files/level-2/2first.jpg" },
+
+  { name: "Level 11", image: "https://backrooms-wiki.wdfiles.com/local--files/level-11/11iconic.jpg" },
+
+  { name: "Level 9", image: "https://backrooms-wiki.wdfiles.com/local--files/level-9/Level-9-1-cc.jpg" },
+
+  { name: "Level 94", image: "https://backrooms-wiki.wdfiles.com/local--files/level-94/94%20CC%201.jpg" },
+
+  { name: "Level 101", image: "https://backrooms-wiki.wdfiles.com/local--files/level-101/field.jpg" },
+
+  { name: "Level 404", image: "https://backrooms-sandbox.wdfiles.com/local--files/etoisle/fragment1.png" },
+
+  { name: "Level 8", image: "https://backrooms-wiki.wdfiles.com/local--files/level-8/Level-8-cc.png" },
+
+  { name: "Level 1", image: "https://praetor.wdfiles.com/local--files/level-1/rako%20games.jpg" },
+
+  { name: "Level 38", image: "https://backrooms-wiki.wdfiles.com/local--files/level-38/glitch.jpg" },
+
+  { name: "Level C-912", image: "https://scpsandboxcn.wdfiles.com/local--files/new-img/Level%20C-912_1" },
+
+  { name: "Level Fun+", image: "https://static.wikia.nocookie.net/backrooms-freewriting/images/8/8a/Partyplace.jpg/revision/latest/scale-to-width-down/732?cb=20240204020415" },
+
+  { name: "Level Fun", image: "https://static.wikia.nocookie.net/backrooms-freewriting/images/e/e9/FUN.jpg" },
+
+  { name: "Level !", image: "https://static.wikia.nocookie.net/backrooms/images/0/0f/%21rewriteimageyay.png/revision/latest/scale-to-width-down/284?cb=20241222144828" },
+
+  { name: "Level 369", image: "https://backrooms-wiki.wdfiles.com/local--files/level-369/HallwayReplacement" },
+
+  { name: "Level 9223372036854775807", image: "https://static.wikia.nocookie.net/backrooms-freewriting/images/9/9b/Level_54_Staircase.png/revision/latest/scale-to-width-down/284?cb=20230212132024" },
+
+  { name: "Level 24", image: "https://backrooms-wiki.wdfiles.com/local--files/level-24/moon1" },
+
+  { name: "The Hub", image: "https://backrooms-wiki.wdfiles.com/local--files/fragment:the-hub-0/The-Hub-cc.jpeg" },
+
+  { name: "Th3 Sh4dy Gr3y", image: "https://backrooms-wiki.wdfiles.com/local--files/th3-sh4dy-gr3y/New0Zero" },
+
+  { name: "Manila Room", image: "https://backrooms-wiki.wdfiles.com/local--files/manila-room/manila_final_1.jpg" },
+
+  { name: "Level 421", image: "https://backrooms-wiki.wdfiles.com/local--files/level-421/249end.jpg" },
+
+  { name: "Level 188", image: "https://backrooms-wiki.wdfiles.com/local--files/level-188/courtyardOriginal.jpg" },
+
+  { name: "Level 403", image: "https://backrooms-wiki.wdfiles.com/local--files/level-403/mortality.jpg" }
+
+];
+
+
+// ==========================================
+// BANCO DE ENTIDADES
+// ==========================================
+
+const entities = [
+
+  {
+    name: "Ladrão de Pele",
+    image: "https://backrooms-wiki.wdfiles.com/local--files/entity-10/skinstealer.jpg"
+  },
+  {
+    name: "A Besta",
+    image: "https://static.wikia.nocookie.net/backrooms/images/c/cd/TheBeast.png/revision/latest/scale-to-width-down/284?cb=20240615223949&path-prefix=pt-br"
+  },
+
+  {
+    name: "Faceling",
+    image: "https://static.wikia.nocookie.net/backrooms/images/c/c5/The_Faceling.png/revision/latest/scale-to-width-down/284?cb=20220320130218&path-prefix=pt-br"
+  },
+  {name: "Partygoer",
+    image: "https://static.wikia.nocookie.net/backrooms-escape-together/images/5/5b/Entity_Partygoer.png/revision/latest?cb=20251006124510"
+  },
+  {
+    name: "Bacteria",
+    image: "https://static.wikia.nocookie.net/backrooms/images/d/d7/Early_Painting.png/revision/latest/scale-to-width-down/161?cb=20240615225317&path-prefix=pt-br"  },
+  {
+    name: "Cão de Caça",
+    image: "https://backrooms-wiki.wdfiles.com/local--files/entity-8/Entity_8"
+  },
+
+  {
+    name: "Aglomerado de Pernas",
+    image: "https://backrooms-wiki.wdfiles.com/local--files/entity-5/entity-5-cc[1].jpg"
+  },
+
+  {
+    name: "Mariposas da Morte",
+    image: "https://backrooms-wiki.wdfiles.com/local--files/fragment:entity-4-0/french"
+  },
+
+  {
+    name: "Sorriso",
+    image: "https://backrooms-wiki.wdfiles.com/local--files/entity-3/entity-3-cc.png"
   }
-  for(let i=0;i<cols;i++) if(Math.random() < 0.55) makeColumn(i);
-  let running = true;
-  function animate(){
-    if(!running) return;
-    for(const c of columnElements){
-      const top = (parseFloat(c.el.style.top||'-100vh') || -window.innerHeight) + c.speed;
-      c.el.style.top = (top > window.innerHeight + 200 ? -Math.random()*1200 : top) + 'px';
-      if(Math.random() < 0.08){
-        const idx = Math.floor(Math.random()*c.el.children.length);
-        c.el.children[idx].textContent = Math.random()>0.5?'0':'1';
-      }
-    }
-requestAnimationFrame(animate);
+
+];
+
+
+// ==========================================
+// VARIÁVEIS DO JOGO
+// ==========================================
+
+const $ = (id) => document.getElementById(id);
+
+let score = 0;
+let round = 0;
+let streak = 0;
+
+let current = null;
+let answered = false;
+
+let deck = [];
+
+let gameMode = "levels";
+
+
+// ==========================================
+// SELECIONAR BANCO ATIVO
+// ==========================================
+
+function getActivePool() {
+  return gameMode === "levels" ? levels : entities;
+}
+
+
+// ==========================================
+// EMBARALHAR
+// ==========================================
+
+function shuffle(array) {
+
+  const copy = [...array];
+
+  for (let i = copy.length - 1; i > 0; i--) {
+
+    const j = Math.floor(Math.random() * (i + 1));
+
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+
   }
-  animate();
-  document.getElementById('toggleBinary').addEventListener('click', ()=>{
-    running = !running;
-    if(running) animate();
-    document.getElementById('toggleBinary').textContent = running ? 'Parar Chuva Binária' : 'Iniciar Chuva Binária';
+
+  return copy;
+}
+
+
+// ==========================================
+// PRÓXIMA IMAGEM
+// ==========================================
+
+function nextFromDeck() {
+
+  const pool = getActivePool();
+
+  if (!deck.length) {
+    deck = shuffle(pool);
+  }
+
+  return deck.pop();
+}
+
+
+// ==========================================
+// NOVA QUESTÃO
+// ==========================================
+
+function newQuestion() {
+
+  answered = false;
+
+  round++;
+
+  current = nextFromDeck();
+
+  $("round").textContent = round;
+
+  $("camNumber").textContent =
+    String(round).padStart(2, "0");
+
+  $("feedback").textContent =
+    "Selecione uma das quatro alternativas.";
+
+  $("feedback").className = "feedback";
+
+  $("nextButton").style.display = "none";
+
+  $("levelImage").style.display = "block";
+
+  $("fallback").style.display = "none";
+
+  $("levelImage").onerror = () => {
+
+    $("levelImage").style.display = "none";
+
+    $("fallback").style.display = "block";
+
+  };
+
+  $("levelImage").src = current.image;
+
+
+  // Criar alternativas erradas
+
+  const wrong = shuffle(
+    getActivePool().filter(
+      item => item.name !== current.name
+    )
+  ).slice(0, 3);
+
+
+  // Misturar resposta certa com as erradas
+
+  const choices = shuffle([current, ...wrong]);
+
+  const letters = ["A", "B", "C", "D"];
+
+  $("answers").innerHTML = "";
+
+
+  choices.forEach((item, index) => {
+
+    const button = document.createElement("button");
+
+    button.className = "answer";
+
+    button.innerHTML = `
+      <span class="key">${letters[index]}</span>
+      <span>${item.name}</span>
+    `;
+
+    button.addEventListener("click", () => {
+      chooseAnswer(item, button);
+    });
+
+    $("answers").appendChild(button);
+
   });
 
-  // glitch toggle
-  let glitchOn = true;
-  document.getElementById('toggleGlitch').addEventListener('click', ()=>{
-    glitchOn = !glitchOn;
-    const g = document.querySelector('.title .glitch');
-    if(!glitchOn){ g.style.animation = 'none'; document.querySelector('.card').style.border = '1px solid rgba(0,0,0,0.03)'; }
-    else { g.style.animation = ''; document.querySelector('.card').style.border = '1px dashed rgba(0,0,0,0.06)'; }
-    document.getElementById('toggleGlitch').textContent = glitchOn ? 'Ativar Glitch' : 'Desativar Glitch';
-  });
 
-  // creepypasta toggle
-  let creep = false;
-  document.getElementById('toggleCreep').addEventListener('click', ()=>{
-    creep = !creep;
-    const aside = document.querySelector('aside');
-    if(creep){
-      const p = document.createElement('p'); p.className='note'; p.id='creepy'; p.textContent='Relato adicional: marcas de dedos pálidos no gargalo da garrafa.'; aside.appendChild(p);
-      document.getElementById('toggleCreep').textContent='Remover Creepypasta';
-    } else {
-      const p = document.getElementById('creepy'); if(p) p.remove();
-      document.getElementById('toggleCreep').textContent='Versão Creepypasta';
+  // Barra de progresso
+
+  const poolSize = getActivePool().length;
+
+  const progress = ((round - 1) % poolSize + 1) / poolSize * 100;
+
+  $("progressBar").style.width = `${progress}%`;
+
+}
+
+
+// ==========================================
+// ESCOLHER RESPOSTA
+// ==========================================
+
+function chooseAnswer(selected, button) {
+
+  if (answered) return;
+
+  answered = true;
+
+  const buttons = [
+    ...$("answers").querySelectorAll("button")
+  ];
+
+
+  // Mostrar alternativa correta
+
+  buttons.forEach(btn => {
+
+    btn.disabled = true;
+
+    const answerName = btn.querySelector("span:last-child").textContent;
+
+    if (answerName === current.name) {
+      btn.classList.add("correct");
     }
+
   });
 
-  // download
-  document.getElementById('downloadBtn').addEventListener('click', ()=>{
-    const html = '<!doctype html>' + document.documentElement.outerHTML;
-    const blob = new Blob([html],{type:'text/html'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'agua-de-amendoa-backrooms.html'; document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url), 10000);
-  });
 
-  // Página Backrooms toggle
-  const backroomsPage = document.getElementById('backroomsPage');
-  document.getElementById('goBackrooms').addEventListener('click', ()=>{
-    backroomsPage.style.display='flex';
-  });
-  function closeBackrooms(){ backroomsPage.style.display='none'; }
+  // Verificar resposta
 
-  // resize
-  let resizeTimer;
-  window.addEventListener('resize', ()=>{
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(()=>{
-      matrix.innerHTML=''; columnElements.length=0;
-      const newCols = Math.floor(window.innerWidth/18);
-      for(let i=0;i<newCols;i++) if(Math.random()<0.55) makeColumn(i);
-    },250);
-  });
+  if (selected.name === current.name) {
+
+    score++;
+
+    streak++;
+
+    $("feedback").textContent =
+      "✓ CORRETO — identificação confirmada.";
+
+    $("feedback").className = "feedback good";
+
+  } else {
+
+    streak = 0;
+
+    button.classList.add("wrong");
+
+    $("feedback").textContent =
+      `✕ INCORRETO — era ${current.name}.`;
+
+    $("feedback").className = "feedback bad";
+
+  }
+
+
+  // Atualizar estatísticas
+
+  $("score").textContent = score;
+
+  $("streak").textContent = streak;
+
+  $("nextButton").style.display = "block";
+
+}
+
+
+// ==========================================
+// ALTERNAR ENTRE LEVELS E ENTIDADES
+// ==========================================
+
+$("modeButton").addEventListener("click", () => {
+
+  if (gameMode === "levels") {
+
+    gameMode = "entities";
+
+    $("modeButton").textContent =
+      "☰ QUIZ: ENTIDADES";
+
+    $("title").textContent =
+      "ENTITY QUIZ";
+
+    $("question").textContent =
+      "Qual entidade está mostrada na imagem?";
+
+  } else {
+
+    gameMode = "levels";
+
+    $("modeButton").textContent =
+      "☰ QUIZ: LEVELS";
+
+    $("title").textContent =
+      "LEVEL QUIZ";
+
+    $("question").textContent =
+      "Qual é o nível mostrado na imagem?";
+
+  }
+
+
+  // Reiniciar o baralho e a sequência
+
+  deck = [];
+
+  round = 0;
+
+  streak = 0;
+
+  $("round").textContent = 1;
+
+  $("streak").textContent = 0;
+
+  $("progressBar").style.width = "0%";
+
+
+  // Gerar nova questão
+
+  newQuestion();
+
+});
+
+
+// ==========================================
+// BOTÃO PRÓXIMA IMAGEM
+// ==========================================
+
+$("nextButton").addEventListener("click", newQuestion);
+
+
+// ==========================================
+// INICIAR JOGO
+// ==========================================
+
+newQuestion();
+
 </script>
 </body>
 </html>
